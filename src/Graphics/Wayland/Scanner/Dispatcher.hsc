@@ -5,7 +5,7 @@ where
 
 import Graphics.Wayland.Server (Client (..))
 
-import Control.Monad.Fail (MonadFail)
+import Control.Monad.Fail ()
 import Data.IORef
 import Data.Word (Word32)
 import Foreign.C.Types (CInt(..))
@@ -66,7 +66,7 @@ makeDispatcherForeigns str name =
         ]
 
 makeSetterType :: TH.Name -> TH.Type
-makeSetterType name = 
+makeSetterType name =
     let resType = TH.AppT (TH.ConT ''IO) (TH.TupleT 0)
         ptrType = TH.AppT (TH.ConT ''Ptr)
         thTypes = [ptrType (TH.ConT ''WlResource), TH.ConT name, resType]
@@ -130,4 +130,3 @@ foreign import ccall "wl_resource_create" c_create :: Ptr Client -> Ptr WlInterf
 
 createResource :: Client -> Ptr WlInterface -> Int -> Word32 -> IO (Ptr WlResource)
 createResource (Client cPtr) iface version name = c_create cPtr iface (fromIntegral version) name
-
